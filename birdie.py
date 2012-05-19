@@ -1,4 +1,6 @@
 import wiggle
+import sys
+import re
 
 #######################################
 #
@@ -65,6 +67,7 @@ def store(instruction):
 
 	stack[registers[stack_ptr]] = registers[register_src]
 
+buffer = None
 def read(instruction):
 	"""
 		code: 0x5
@@ -78,13 +81,14 @@ def read(instruction):
 			to put a number into this register, including waiting for 
 			more input.
 	"""
-	while True:
-		value = raw_input('(int): ')
-		if value.isdigit():
-			break
-		print 'The input must be a integer number'
+	global buffer
+	if not buffer:
+		buffer = re.findall(r'\d+', ''.join(sys.stdin.readlines())[:-1])
 
-	registers['0'] = int(value)
+	
+	registers['0'] = int(buffer.pop(0))
+	if len(buffer) == 0:
+		registers['4'] = 1
 
 def write(instruction):
 	"""
