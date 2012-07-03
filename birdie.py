@@ -83,10 +83,10 @@ def read(instruction):
 	"""
 	global buffer
 	if not buffer:
+		print ('Enter your input: (to finish press enter followed of ctrl+d)')
 		buffer = re.findall(r'\d+', ''.join(sys.stdin.readlines())[:-1])
 
-	
-	registers['0'] = int(buffer.pop(0))
+	registers['0'] = int(buffer.pop(0)) 
 	if len(buffer) == 0:
 		registers['4'] = 1
 
@@ -262,7 +262,11 @@ def verbose():
 			)
 
 def debug():
-	raw_input('Press a key to continue')
+	try:
+		raw_input('Press a key to continue')
+	except EOFError:
+		sys.stdin = open('/dev/tty')
+		raw_input('Press a key to continue')
 
 #######################################
 #
